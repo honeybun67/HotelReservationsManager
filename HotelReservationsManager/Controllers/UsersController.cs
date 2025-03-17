@@ -7,151 +7,150 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HotelReservationsManager.Data;
 using HotelReservationsManager.Data.Models;
+using HotelReservationsManager.ViewModels.User;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using HotelReservationsManager.Services.Contracts;
 
 namespace HotelReservationsManager.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserService service;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(IUserService service)
         {
-            _context = context;
+            this.service = service;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = GlobalConstants.AdminRole)]
+        public async Task<IActionResult> Index(IndexUsersViewModel? model)
         {
-            return View(await _context.User.ToListAsync());
+            model = await service.GetUsersAsync(model);
+            return View(model);
         }
 
-        // GET: Users/Details/5
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await service.CreateUserAsync(model);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        [Authorize(Roles = GlobalConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var model = await service.GetUserToEditAsync(id);
+            return View(model);
+        }
+
+        [Authorize(Roles = GlobalConstants.AdminRole)]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await service.UpdateUserAsync(model);
+                return this.RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            DetailsUserViewModel model = await service.GetUserDetailsAsync(id);
+            return View(model);
+        }
+        [Authorize(Roles = GlobalConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> Seed()
+        {
+            const string Password = "123456";
+            const string UCN = "1122334455";
+            const string PhoneNumber = "0896342517";
+            for (int i = 0; i < 50; i++)
             {
-                return NotFound();
+                string result = await service.CreateUserAsync(
+
+                      new CreateUserViewModel()
+                      {
+                          FirstName = $"Name {i}",
+                          MiddleName = $"MiddleName {i}",
+                          LastName = $"LastName {i}",
+                          UCN = UCN,
+                          PhoneNumber = PhoneNumber,
+                          HireDate = DateTime.UtcNow,
+                          Password = Password,
+                          ConfirmPassword = Password,
+                          Email = $"user{i}@app.bg"
+                      }
+                      );
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        [Authorize(Roles = GlobalConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (id != userId)
+            {
+                await service.DeleteUserAsync(id);
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Users/Create
-        public IActionResult Create()
+        [HttpGet]
+
+        public IActionResult Login()
         {
             return View();
         }
 
-        // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,MiddleName,LastName,UCN,PhoneNumber,HireDate,Status,QuitDate")] User user)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
+            string returnUrl = Url.Content("~/");
 
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,FirstName,MiddleName,LastName,UCN,PhoneNumber,HireDate,Status,QuitDate")] User user)
-        {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
-                try
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await service.Login(model);
+                if (result.Succeeded)
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    // _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
                 }
-                catch (DbUpdateConcurrencyException)
+                if (result.RequiresTwoFactor)
                 {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
+                if (result.IsLockedOut)
+                {
+                    // _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
             }
 
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var user = await _context.User.FindAsync(id);
-            if (user != null)
-            {
-                _context.User.Remove(user);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(string id)
-        {
-            return _context.User.Any(e => e.Id == id);
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction(nameof(Index), "Home");
         }
     }
 }
