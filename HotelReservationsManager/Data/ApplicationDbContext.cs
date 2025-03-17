@@ -1,15 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using HotelReservationsManager.Data.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HotelReservationsManager.Data.Models;
+using Microsoft.Extensions.Options;
+using System.Reflection.Emit;
 
-namespace HotelReservationsManager.Data
+namespace HotelReservations.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbSet<HotelReservationsManager.Data.Models.User> User { get; set; } = default!;
+        public ApplicationDbContext()
+        {
+
+        }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer();
+            }
+            optionsBuilder.UseLazyLoadingProxies();
+        }
     }
+
 }
