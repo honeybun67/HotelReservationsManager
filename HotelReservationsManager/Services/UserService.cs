@@ -15,7 +15,7 @@ namespace HotelReservationsManager.Services
         private readonly SignInManager<User> signInManager;
         private const int ItemsCount = 0;
 
-        public UsersService(UserManager<User> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
+        public UserService(UserManager<User> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.context = context;
