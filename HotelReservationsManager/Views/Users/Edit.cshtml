@@ -1,69 +1,44 @@
-﻿@model HotelReservationsManager.Data.Models.User
+﻿@model EditUserViewModel
 
-@{
-    ViewData["Title"] = "Edit";
-}
+<h2>Edit user</h2>
 
-<h1>Edit</h1>
-
-<h4>User</h4>
-<hr />
 <div class="row">
+    <div class="col-md-4">    </div>
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
+        <form id="registerForm" asp-action="Edit" method="post">
+            <h2>Edit user account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="FirstName" class="form-control" aria-required="true" />
+                <label asp-for="FirstName">First name</label>
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MiddleName" class="control-label"></label>
-                <input asp-for="MiddleName" class="form-control" />
-                <span asp-validation-for="MiddleName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="LastName" class="form-control" aria-required="true" />
+                <label asp-for="LastName">Last name</label>
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UCN" class="control-label"></label>
-                <input asp-for="UCN" class="form-control" />
-                <span asp-validation-for="UCN" class="text-danger"></span>
+                <label asp-for="Status" class="control-label"></label>
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Status" /> Active
+                    </label>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <label asp-for="@Model.Role" class="control-label">User role</label>
+                <div>
+                    <input type="checkbox" asp-for="@Model.Role" id="chkUserRole">
+                    <label for="chkUserRole">User</label>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="HireDate" class="control-label"></label>
-                <input asp-for="HireDate" class="form-control" />
-                <span asp-validation-for="HireDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Status" /> @Html.DisplayNameFor(model => model.Status)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuitDate" class="control-label"></label>
-                <input asp-for="QuitDate" class="form-control" />
-                <span asp-validation-for="QuitDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update</button>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <div>
+        <a asp-action="Index" class="btn btn-info">Back to List</a>
+    </div>
