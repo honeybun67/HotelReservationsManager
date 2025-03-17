@@ -1,4 +1,4 @@
-using HotelReservationsManager.Models;
+using HotelReservationsManager.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

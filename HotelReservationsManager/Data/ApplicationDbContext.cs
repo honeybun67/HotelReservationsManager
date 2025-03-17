@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using HotelReservationsManager.Data.Models;
 
 namespace HotelReservationsManager.Data
 {
@@ -9,5 +10,6 @@ namespace HotelReservationsManager.Data
             : base(options)
         {
         }
+        public DbSet<HotelReservationsManager.Data.Models.User> User { get; set; } = default!;
     }
 }
