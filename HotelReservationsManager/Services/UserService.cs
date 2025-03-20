@@ -54,7 +54,9 @@ namespace HotelReservationsManager.Services
                     await userManager.AddToRoleAsync(user, GlobalConstants.UserRole);
                 }
             }
+            await context.SaveChangesAsync();
             return user.Id;
+
         }
 
         public async Task<bool> DeleteUserAsync(string id)

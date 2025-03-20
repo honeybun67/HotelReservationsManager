@@ -4,10 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Reflection.Emit;
 
-namespace HotelReservations.Data
+namespace HotelReservationsManager.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
     {
+       // public virtual DbSet<Client> Clients { get; set; }
+       // public virtual DbSet<Room> Rooms { get; set; }
+       // public virtual DbSet<Reservation> Reservations { get; set; }
+       // public virtual DbSet<ClientHistory> ClientHistories { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -29,5 +33,4 @@ namespace HotelReservations.Data
             optionsBuilder.UseLazyLoadingProxies();
         }
     }
-
 }

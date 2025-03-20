@@ -1,6 +1,8 @@
-﻿namespace HotelReservationsManager.Data.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace HotelReservationsManager.Data.Models
 {
-    public class User
+    public class User:IdentityUser
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Password { get; set; }
