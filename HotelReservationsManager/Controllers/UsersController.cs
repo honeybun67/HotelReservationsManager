@@ -120,37 +120,38 @@ namespace HotelReservationsManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            string returnUrl = Url.Content("~/");
-
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await service.Login(model);
-                if (result.Succeeded)
-                {
-                    // _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    // _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
+                return View(model);
             }
 
-            // If we got this far, something failed, redisplay form
-            return RedirectToAction(nameof(Index), "Home");
+            string returnUrl = Url.Content("~/");
+
+            var result = await service.Login(model);
+            if (result == null)
+            {
+                ModelState.AddModelError(string.Empty, "Unexpected error occurred.");
+                return View(model);
+            }
+
+            if (result.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            }
+
+            if (result.IsLockedOut)
+            {
+                return RedirectToPage("./Lockout");
+            }
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
         }
+
     }
 }

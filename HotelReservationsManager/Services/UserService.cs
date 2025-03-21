@@ -39,26 +39,33 @@ namespace HotelReservationsManager.Services
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                if (userManager.Users.Count() <= 1)
-                {
-                    IdentityRole roleUser = new IdentityRole() { Name = GlobalConstants.UserRole };
-                    IdentityRole roleAdmin = new IdentityRole() { Name = GlobalConstants.AdminRole };
-                    await roleManager.CreateAsync(roleUser);
-                    await roleManager.CreateAsync(roleAdmin);
-                    await userManager.AddToRoleAsync(user, GlobalConstants.AdminRole);
-                }
-                else
-                {
-                    await userManager.AddToRoleAsync(user, GlobalConstants.UserRole);
-                }
+                return null; // Ако регистрацията е неуспешна, връщаме null
             }
-            await context.SaveChangesAsync();
+
+            // Създаваме ролите, ако не съществуват
+            if (!await roleManager.RoleExistsAsync(GlobalConstants.UserRole))
+            {
+                await roleManager.CreateAsync(new IdentityRole(GlobalConstants.UserRole));
+            }
+            if (!await roleManager.RoleExistsAsync(GlobalConstants.AdminRole))
+            {
+                await roleManager.CreateAsync(new IdentityRole(GlobalConstants.AdminRole));
+            }
+
+            // Ако това е първият потребител, става администратор
+            if ((await userManager.Users.CountAsync()) <= 1)
+            {
+                await userManager.AddToRoleAsync(user, GlobalConstants.AdminRole);
+            }
+            else
+            {
+                await userManager.AddToRoleAsync(user, GlobalConstants.UserRole);
+            }
+
             return user.Id;
-
         }
-
         public async Task<bool> DeleteUserAsync(string id)
         {
             User? user = await GetUserByIdAsync(id);
