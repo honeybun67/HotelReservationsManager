@@ -1,5 +1,5 @@
 ﻿using HotelReservationsManager.ViewModels.Users;
-using HotelReservationsManagerManager.ViewModels.Users;
+using HotelReservationsManager.ViewModels.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

@@ -4,8 +4,6 @@
     Dictionary<string, string> routs = new Dictionary<string, string>()
     {
         {"filterByName", Model.FilterByName },
-        {"sortUsersBy",Model.SortUsersBy},
-        {"isAsc",Model.IsAsc.ToString()},
         {"itemsPerPage",Model.ItemsPerPage.ToString()}
     };
 }
@@ -17,7 +15,6 @@
     <div class="input-group mb-3">
         <button type="submit" class="btn btn-outline-secondary">Search</button>
         <input asp-for="FilterByName" type="text" class="form-control" placeholder="Name" aria-label="Search" aria-describedby="basic-addon2">
-        <input asp-for="SortUsersBy" type="hidden" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon2">
     </div>
 </form>
 <table class="table table-bordered table-striped table-hover">

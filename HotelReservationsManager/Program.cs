@@ -24,20 +24,21 @@ namespace HotelReservations.Web
             });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddIdentity<User, IdentityRole>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 4;
-            })
+            // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            builder.Services
+                .AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 4;
+                })
+                // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
             builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();  // Добавете тази линия за Razor Pages
 
             // Add your services
             builder.Services.AddTransient<IUsersService, UsersService>();
@@ -67,6 +68,13 @@ namespace HotelReservations.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();  // Това трябва да бъде тук, за да се конфигурират правилно Razor Pages
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/debug", async context =>
+                {
+                    await context.Response.WriteAsync("Server is running!");
+                });
+            });
             app.Run();
         }
     }

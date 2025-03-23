@@ -1,4 +1,4 @@
-﻿namespace HotelReservationsManagerManager.ViewModels
+﻿namespace HotelReservationsManager.ViewModels
 {
     using System;
     public class PagingViewModel
