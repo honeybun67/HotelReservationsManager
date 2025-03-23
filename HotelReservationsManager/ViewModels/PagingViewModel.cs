@@ -1,4 +1,4 @@
-﻿namespace HotelReservationsManager.ViewModels
+﻿namespace HotelReservationsManager.ViewModels.Shared
 {
     using System;
     public class PagingViewModel
@@ -28,8 +28,5 @@
         public int ItemsPerPage { get; set; }
 
         public string Action { get; set; }
-
     }
-
-
 }

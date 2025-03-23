@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using HotelReservationsManager.ViewModels;
+using HotelReservationsManager.ViewModels.Shared;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
-namespace HotelReservationsManager.Controllers
+namespace HotelReservationsManager.Web.Controllers
 {
     public class HomeController : Controller
     {

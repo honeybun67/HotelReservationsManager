@@ -1,12 +1,17 @@
 ﻿using HotelReservationsManager.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Reflection.Emit;
 
 namespace HotelReservationsManager.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole, string>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
+        //public virtual DbSet<Client> Clients { get; set; }
+        //public virtual DbSet<Room> Rooms { get; set; }
+        //public virtual DbSet<Reservation> Reservations { get; set; }
+        //public virtual DbSet<ClientHistory> ClientHistories { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -17,7 +22,7 @@ namespace HotelReservationsManager.Data
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(builder);  
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,4 +33,5 @@ namespace HotelReservationsManager.Data
             optionsBuilder.UseLazyLoadingProxies();
         }
     }
+
 }

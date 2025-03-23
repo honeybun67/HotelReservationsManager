@@ -1,12 +1,13 @@
-using HotelReservationsManager.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using HotelReservationsManager.Data.Models;
+using HotelReservationsManager.Data;
 using HotelReservationsManager.Services.Contracts;
 using HotelReservationsManager.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using HotelReservations.Services;
 
-namespace HotelReservationsManager
+namespace HotelReservations.Web
 {
     public class Program
     {
@@ -23,25 +24,23 @@ namespace HotelReservationsManager
             });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Important !!!!!!!!!!!!!!!!!!!!!!!!!!
-            builder.Services
-                .AddDefaultIdentity<User>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 4;
-                })
-                // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
+            })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();  // Добавете тази линия за Razor Pages
 
-            //Register services
+            // Add your services
             builder.Services.AddTransient<IUsersService, UsersService>();
-
 
             var app = builder.Build();
 
@@ -53,7 +52,6 @@ namespace HotelReservationsManager
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -67,7 +65,7 @@ namespace HotelReservationsManager
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+            app.MapRazorPages();  // Това трябва да бъде тук, за да се конфигурират правилно Razor Pages
 
             app.Run();
         }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 
 namespace HotelReservationsManager.Data.Models
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -15,3 +14,4 @@ namespace HotelReservationsManager.Data.Models
 
     }
 }
+    

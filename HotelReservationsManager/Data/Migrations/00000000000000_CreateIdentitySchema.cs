@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace HotelReservationsManager.Data.Migrations
+namespace HotelReservationsManagerManager.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

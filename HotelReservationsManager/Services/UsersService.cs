@@ -1,14 +1,20 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
-using HotelReservationsManager.Data.Models;
+
 using HotelReservationsManager.Data;
+using HotelReservationsManager.Data.Models;
 using HotelReservationsManager.Services.Contracts;
 using HotelReservationsManager.ViewModels.Users;
-using HotelReservationsManager;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
-namespace HotelReservations.Services
+namespace HotelReservationsManager.Services
 {
 
     public class UsersService : IUsersService
