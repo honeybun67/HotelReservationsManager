@@ -1,5 +1,4 @@
-﻿@model HotelReservationsManager.Data.Models.Client
-
+﻿@model EditClientViewModel
 @{
     ViewData["Title"] = "Edit";
 }
@@ -24,9 +23,9 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
-                <input asp-for="Number" class="form-control" />
-                <span asp-validation-for="Number" class="text-danger"></span>
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>

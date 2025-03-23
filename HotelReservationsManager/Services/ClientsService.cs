@@ -113,6 +113,20 @@ namespace HotelReservationsManager.Services
             return null;
         }
 
+        public async Task DeleteClientAsync(ClientDetailsViewModel model)
+        {
+            Client client = await context.Clients.FindAsync(model.Id);
+            if (client != null)
+            {
+                //if (client.ReservationId != null)
+                //{
+                //	client.ReservationId= null;
+                //}
+                context.Clients.Remove(client);
+                await this.context.SaveChangesAsync();
+            }
+        }
+
     }
 }
 

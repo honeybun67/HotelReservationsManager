@@ -1,48 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HotelReservationsManager.Data;
-using HotelReservationsManager.Data.Models;
-
-namespace HotelReservationsManager.Controllers
+﻿namespace HotelReservations.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using HotelReservationsManager.Data;
+    using HotelReservationsManager.ViewModels.Clients;
+    using HotelReservationsManager.Services.Contracts;
+    using Microsoft.AspNetCore.Authorization;
+    using HotelReservationsManager.Data;
+    using HotelReservationsManager.Services.Contracts;
+    using HotelReservationsManager.ViewModels.Clients;
+
+    [Authorize(Roles = "Admin,User")]
     public class ClientsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
+        private readonly IClientsService service;
 
-        public ClientsController(ApplicationDbContext context)
+        public ClientsController(ApplicationDbContext context, IClientsService service)
         {
-            _context = context;
+            this.context = context;
+            this.service = service;
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(ClientsIndexViewModel model)
         {
-            return View(await _context.Clients.ToListAsync());
+            model = await service.GetClientsAsync(model);
+
+            return View(model);
         }
 
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(string id)
+        //public async Task<IActionResult> Details(string id, ClientDetailsViewModel model)
+        //{
+          //  model = await service.Get(id);
+          //  return View(model);
+
+       // }
+        public async Task<IActionResult> Seed()
         {
-            if (id == null)
+            List<string> firstName = new List<string>() { "John", "William", "Sara", "Tony", "Jane", "Carl", "Ben", "Lusy" };
+            List<string> lastName = new List<string>() { "Johnson", "Phillips", "Benet", "Howard", "Willies", "Perry" };
+            Random random = new Random();
+            Boolean isAdult = false;
+            for (int i = 0; i < firstName.Count; i++)
             {
-                return NotFound();
+                if (firstName[i].Length > 3)
+                {
+                    isAdult = true;
+                }
             }
-
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (client == null)
+            for (int i = 1; i <= 20; i++)
             {
-                return NotFound();
-            }
+                string result = await service.CreateClientAsync(
 
-            return View(client);
+                      new CreateClientViewModel()
+                      {
+                          FirstName = $"{firstName[random.Next(0, firstName.Count)]}",
+                          LastName = $"{lastName[random.Next(0, lastName.Count)]}",
+                          PhoneNumber = random.Next(0870000000, 0899999999).ToString("D10"),
+                          IsAdult = isAdult,
+                          Email = $"client{i}@gmail.com"
+                      }
+                      );
+            }
+            return RedirectToAction(nameof(Index));
         }
-
         // GET: Clients/Create
         public IActionResult Create()
         {
@@ -54,31 +76,21 @@ namespace HotelReservationsManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Number,Email,IsAdult")] Client client)
+        public async Task<IActionResult> Create(CreateClientViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(client);
-                await _context.SaveChangesAsync();
+                await service.CreateClientAsync(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(model);
         }
 
         // GET: Clients/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var client = await _context.Clients.FindAsync(id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-            return View(client);
+            EditClientViewModel model = await service.EditCustomerByIdAsync(id);
+            return View(model);
         }
 
         // POST: Clients/Edit/5
@@ -86,72 +98,35 @@ namespace HotelReservationsManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,FirstName,LastName,Number,Email,IsAdult")] Client client)
+        public async Task<IActionResult> Edit(EditClientViewModel model)
         {
-            if (id != client.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(client);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClientExists(client.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await service.UpdateCustomerAsync(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(model);
         }
 
         // GET: Clients/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            return View(client);
+            ClientDetailsViewModel model = await service.DeleteClientByIdAsync(id);
+            return View(model);
         }
 
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(ClientDetailsViewModel model)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client != null)
-            {
-                _context.Clients.Remove(client);
-            }
-
-            await _context.SaveChangesAsync();
+            await service.DeleteClientAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ClientExists(string id)
         {
-            return _context.Clients.Any(e => e.Id == id);
+            return context.Clients.Any(e => e.Id == id);
         }
     }
 }

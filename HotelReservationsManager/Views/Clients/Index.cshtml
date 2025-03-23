@@ -1,7 +1,15 @@
-﻿@model IEnumerable<HotelReservationsManager.Data.Models.Client>
+﻿@model ClientsIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    Dictionary<string, string> routs = new Dictionary<string, string>()
+    {
+        {"filter",Model.FilterByName },
+
+    };
+}
+
+@{
+    ViewData["Title"] = "Clients";
 }
 
 <h1>Index</h1>
@@ -9,29 +17,25 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+<form asp-action="Index" method="get">
+    <div class="input-group mb-3">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+        <input asp-for="FilterByName" type="text" class="form-control" placeholder="Name" aria-label="Search" aria-describedby="basic-addon2">
+    </div>
+</form>
+
+<table class="table table-bordered table-striped table-hover" style="border-radius: 10px; overflow: hidden; text-align:center">
+    <thead class="thead-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAdult)
-            </th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>IsAdult</th>
+            <th>Phone Number</th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Clients) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
@@ -40,7 +44,7 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Number)
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
@@ -49,11 +53,17 @@
                 @Html.DisplayFor(modelItem => item.IsAdult)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Edit</a>
+                <a asp-action="Details" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-success">Details</a>
+                <a asp-action="Delete" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<partial name="_PagingPartial" />
