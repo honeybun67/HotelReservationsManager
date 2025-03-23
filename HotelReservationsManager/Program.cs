@@ -23,7 +23,7 @@ namespace HotelReservationsManager
             });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Important !!!!!!!!!!!!!!!!!!!!!!!!!!
             builder.Services
                 .AddDefaultIdentity<User>(options =>
                 {
