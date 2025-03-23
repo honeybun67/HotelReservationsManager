@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿namespace HotelReservationsManager.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,17 @@
     using HotelReservationsManagerManager.ViewModels.Users;
     using HotelReservationsManagerManager;
 
+=======
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using HotelReservationsManager.Services.Contracts;
+using HotelReservationsManager.ViewModels.Users;
+using System.Security.Claims;
+
+namespace HotelReservationsManager.Web.Controllers
+{
+>>>>>>> 86b62af0151b9cb2c0fcedebffbdd84d11f40a92
     public class UsersController : Controller
     {
         private readonly IUsersService service;
@@ -22,7 +34,13 @@
         [Authorize(Roles = GlobalConstants.AdminRole)]
         public async Task<IActionResult> Index(IndexUsersViewModel? model)
         {
+<<<<<<< HEAD
             model = await service.GetUsersAsync(model);
+=======
+
+            model = await service.GetUsersAsync(model);
+
+>>>>>>> 86b62af0151b9cb2c0fcedebffbdd84d11f40a92
             return View(model);
         }
 
@@ -50,7 +68,11 @@
             return View(model);
         }
 
+<<<<<<< HEAD
         [Authorize(Roles = GlobalConstants.AdminRole)]
+=======
+        /*[Authorize(Roles = GlobalConstants.AdminRole)]
+>>>>>>> 86b62af0151b9cb2c0fcedebffbdd84d11f40a92
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
@@ -59,6 +81,7 @@
                 await service.UpdateUserAsync(model);
                 return this.RedirectToAction(nameof(Index));
             }
+<<<<<<< HEAD
             return View(model);
         }
         public async Task<IActionResult> Details(string id)
@@ -93,6 +116,20 @@
             }
             return RedirectToAction(nameof(Index));
         }
+=======
+            model.Roles = service.GetRolesList();
+            return View(model);
+        }
+
+
+      /*  [HttpGet]
+        public async Task<IActionResult> Seed()
+        {
+            await service.SeedUsersAsync();
+            return RedirectToAction(nameof(Index));
+        }*/
+
+>>>>>>> 86b62af0151b9cb2c0fcedebffbdd84d11f40a92
         [Authorize(Roles = GlobalConstants.AdminRole)]
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
