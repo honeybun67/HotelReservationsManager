@@ -1,9 +1,10 @@
 using HotelReservationsManager.Data;
 using HotelReservationsManager.Data.Models;
-using HotelReservationsManager.Services;
 using HotelReservationsManager.Services.Contracts;
+using HotelReservationsManager.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HotelReservations.Services;
 
 namespace HotelReservationsManager
 {
@@ -19,26 +20,28 @@ namespace HotelReservationsManager
             {
                 options.UseSqlServer(connectionString);
                 options.UseLazyLoadingProxies();
-
             });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<User>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 4;
-
-            })
+            // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            builder.Services
+                .AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 4;
+                })
+                // Important !!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            //Add my services
-            builder.Services.AddTransient<IUserService, UserService>();
+            //Register services
+            builder.Services.AddTransient<IUsersService, UsersService>();
+
 
             var app = builder.Build();
 

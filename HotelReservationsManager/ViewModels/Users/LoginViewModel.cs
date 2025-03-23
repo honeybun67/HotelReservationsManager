@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace HotelReservationsManager.ViewModels.User
+﻿namespace HotelReservationsManager.ViewModels.Users
 {
+
+    using System.ComponentModel.DataAnnotations;
     public class LoginViewModel
     {
+
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -11,6 +12,8 @@ namespace HotelReservationsManager.ViewModels.User
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }
 }

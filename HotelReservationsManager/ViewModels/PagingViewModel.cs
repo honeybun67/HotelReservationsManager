@@ -1,11 +1,12 @@
 ﻿namespace HotelReservationsManager.ViewModels
 {
+    using System;
     public class PagingViewModel
     {
         public PagingViewModel(int elementsCount, int itemsPerPage = 5, string action = "Index")
         {
             this.ItemsPerPage = itemsPerPage;
-            this.ElementsCount = elementsCount;
+            this.ElementsCount=elementsCount;
             this.Action = action;
             this.Page = 1;
         }
@@ -27,5 +28,8 @@
         public int ItemsPerPage { get; set; }
 
         public string Action { get; set; }
+
     }
+
+
 }

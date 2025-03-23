@@ -1,13 +1,17 @@
-﻿using HotelReservationsManager.Data.Models;
-using HotelReservationsManager.Data;
-using HotelReservationsManager.Services.Contracts;
+﻿
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using HotelReservationsManager.ViewModels.User;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using HotelReservationsManager.Data.Models;
+using HotelReservationsManager.Data;
+using HotelReservationsManager.Services.Contracts;
+using HotelReservationsManager.ViewModels.Users;
+using HotelReservationsManager;
 
-namespace HotelReservationsManager.Services
+namespace HotelReservations.Services
 {
-    public class UserService: IUserService
+
+    public class UsersService : IUsersService
     {
         private readonly UserManager<User> userManager;
         private readonly ApplicationDbContext context;
@@ -15,7 +19,7 @@ namespace HotelReservationsManager.Services
         private readonly SignInManager<User> signInManager;
         private const int ItemsCount = 0;
 
-        public UserService(UserManager<User> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
+        public UsersService(UserManager<User> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.context = context;
@@ -39,33 +43,24 @@ namespace HotelReservationsManager.Services
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return null; // Ако регистрацията е неуспешна, връщаме null
+                if (userManager.Users.Count() <= 1)
+                {
+                    IdentityRole roleUser = new IdentityRole() { Name = GlobalConstants.UserRole };
+                    IdentityRole roleAdmin = new IdentityRole() { Name = GlobalConstants.AdminRole };
+                    await roleManager.CreateAsync(roleUser);
+                    await roleManager.CreateAsync(roleAdmin);
+                    await userManager.AddToRoleAsync(user, GlobalConstants.AdminRole);
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(user, GlobalConstants.UserRole);
+                }
             }
-
-            // Създаваме ролите, ако не съществуват
-            if (!await roleManager.RoleExistsAsync(GlobalConstants.UserRole))
-            {
-                await roleManager.CreateAsync(new IdentityRole(GlobalConstants.UserRole));
-            }
-            if (!await roleManager.RoleExistsAsync(GlobalConstants.AdminRole))
-            {
-                await roleManager.CreateAsync(new IdentityRole(GlobalConstants.AdminRole));
-            }
-
-            // Ако това е първият потребител, става администратор
-            if ((await userManager.Users.CountAsync()) <= 1)
-            {
-                await userManager.AddToRoleAsync(user, GlobalConstants.AdminRole);
-            }
-            else
-            {
-                await userManager.AddToRoleAsync(user, GlobalConstants.UserRole);
-            }
-
             return user.Id;
         }
+
         public async Task<bool> DeleteUserAsync(string id)
         {
             User? user = await GetUserByIdAsync(id);

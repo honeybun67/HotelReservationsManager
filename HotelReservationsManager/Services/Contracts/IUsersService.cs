@@ -1,9 +1,14 @@
-﻿using HotelReservationsManager.ViewModels.User;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using HotelReservationsManager.ViewModels.Users;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HotelReservationsManager.Services.Contracts
 {
-    public interface IUserService
+    public interface IUsersService
     {
         public Task<string> CreateUserAsync(CreateUserViewModel model);
 
@@ -22,5 +27,8 @@ namespace HotelReservationsManager.Services.Contracts
         public Task Logout();
 
         public Task<SignInResult> Login(LoginViewModel model);
+
+
+
     }
 }

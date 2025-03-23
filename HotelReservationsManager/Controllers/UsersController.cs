@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using HotelReservationsManager.Data;
-using HotelReservationsManager.Data.Models;
-using HotelReservationsManager.ViewModels.User;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using HotelReservationsManager.Services.Contracts;
+using HotelReservationsManager.ViewModels.Users;
+using System.Security.Claims;
 
-namespace HotelReservationsManager.Controllers
+namespace HotelReservationsManager.Web.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly IUserService service;
+        private readonly IUsersService service;
 
-        public UsersController(IUserService service)
+        public UsersController(IUsersService service)
         {
             this.service = service;
         }
@@ -26,7 +19,9 @@ namespace HotelReservationsManager.Controllers
         [Authorize(Roles = GlobalConstants.AdminRole)]
         public async Task<IActionResult> Index(IndexUsersViewModel? model)
         {
+
             model = await service.GetUsersAsync(model);
+
             return View(model);
         }
 
@@ -65,11 +60,7 @@ namespace HotelReservationsManager.Controllers
             }
             return View(model);
         }
-        public async Task<IActionResult> Details(string id)
-        {
-            DetailsUserViewModel model = await service.GetUserDetailsAsync(id);
-            return View(model);
-        }
+
         [Authorize(Roles = GlobalConstants.AdminRole)]
         [HttpGet]
         public async Task<IActionResult> Seed()
@@ -97,6 +88,7 @@ namespace HotelReservationsManager.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
         [Authorize(Roles = GlobalConstants.AdminRole)]
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
@@ -120,38 +112,37 @@ namespace HotelReservationsManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
             string returnUrl = Url.Content("~/");
 
-            var result = await service.Login(model);
-            if (result == null)
+
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Unexpected error occurred.");
-                return View(model);
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await service.Login(model);
+                if (result.Succeeded)
+                {
+                    // _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    // _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
             }
 
-            if (result.Succeeded)
-            {
-                return LocalRedirect(returnUrl);
-            }
-
-            if (result.RequiresTwoFactor)
-            {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-            }
-
-            if (result.IsLockedOut)
-            {
-                return RedirectToPage("./Lockout");
-            }
-
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return View(model);
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction(nameof(Index), "Home");
         }
-
     }
 }

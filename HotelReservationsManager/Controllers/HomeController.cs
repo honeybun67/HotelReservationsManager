@@ -1,6 +1,6 @@
+using System.Diagnostics;
 using HotelReservationsManager.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace HotelReservationsManager.Controllers
 {
