@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -10,6 +9,7 @@ namespace HotelReservationsManager.ViewModels.Users
 {
     public class CreateUserViewModel
     {
+
         [Required]
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -27,14 +27,14 @@ namespace HotelReservationsManager.ViewModels.Users
         public string Email { get; set; }
 
         [Required]
-        [Display(Name="Phone number")]
+        [Display(Name = "Phone number")]
         [StringLength(10)]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
         [Required]
         [StringLength(10)]
         [MinLength(10, ErrorMessage = "UCN must be exactly 10 characters")]
-        [Display(Name ="UCN")]
+        [Display(Name = "UCN")]
         public string UCN { get; set; }
 
         [Required]
@@ -59,7 +59,7 @@ namespace HotelReservationsManager.ViewModels.Users
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        [Display(Name ="Confirm Password")]
+        [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; }
     }
 }

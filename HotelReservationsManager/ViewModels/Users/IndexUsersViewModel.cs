@@ -1,4 +1,4 @@
-﻿using HotelReservationsManager.ViewModels.Shared;
+﻿using HotelReservationsManager.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace HotelReservationsManager.ViewModels.Users
     {
         public IndexUsersViewModel() : base(0)
         {
-                
+
         }
         public IndexUsersViewModel(int elementsCount, int itemsPerPage = 10, string action = "Index") : base(elementsCount, itemsPerPage, action)
         {
@@ -21,4 +21,5 @@ namespace HotelReservationsManager.ViewModels.Users
         public ICollection<IndexUserViewModel> Users { get; set; } = new List<IndexUserViewModel>();
 
     }
+
 }

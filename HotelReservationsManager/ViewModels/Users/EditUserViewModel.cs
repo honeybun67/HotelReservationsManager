@@ -15,7 +15,7 @@ namespace HotelReservationsManager.ViewModels.Users
         [MinLength(1)]
         [MaxLength(100)]
 
-        [Display(Name ="First name")]
+        [Display(Name = "First name")]
         public string FirstName { get; set; }
 
         [Required]
