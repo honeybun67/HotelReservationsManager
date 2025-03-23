@@ -60,6 +60,59 @@ namespace HotelReservationsManager.Services
                 .ToListAsync();
             return model;
         }
+
+        public async Task<EditClientViewModel> EditCustomerByIdAsync(string id)
+        {
+            Client client = await this.context.Clients.FindAsync(id);
+            if (client != null)
+            {
+                return new EditClientViewModel()
+                {
+                    Id = client.Id,
+                    Email = client.Email,
+                    FirstName = client.FirstName,
+                    LastName = client.LastName,
+                    IsAdult = client.IsAdult,
+                    PhoneNumber = client.Number,
+                };
+            }
+            return null;
+        }
+
+        public async Task UpdateCustomerAsync(EditClientViewModel model)
+        {
+            Client client = new Client()
+            {
+                Id = model.Id,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                IsAdult = model.IsAdult,
+                Number = model.PhoneNumber,
+            };
+            context.Update(client);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<ClientDetailsViewModel> DeleteClientByIdAsync(string id)
+        {
+            Client client = await context.Clients.FindAsync(id);
+            if (client != null)
+            {
+                ClientDetailsViewModel model = new ClientDetailsViewModel()
+                {
+                    Id = client.Id,
+                    Email = client.Email,
+                    FirstName = client.FirstName,
+                    LastName = client.LastName,
+                    IsAdult = client.IsAdult,
+                    PhoneNumber = client.Number,
+                };
+                return model;
+            }
+            return null;
+        }
+
     }
 }
 
