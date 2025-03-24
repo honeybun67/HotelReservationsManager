@@ -61,6 +61,37 @@ namespace HotelReservationsManager.Services
             return model;
         }
 
+        public async Task<ClientDetailsViewModel> GetClientDetailsByIdAsync(string id)
+        {
+            Client client = await this.context.Clients.FindAsync(id);
+            if (client != null)
+            {
+                ClientDetailsViewModel model = new ClientDetailsViewModel()
+                {
+                    Email = client.Email,
+                    FirstName = client.FirstName,
+                    LastName = client.LastName,
+                    IsAdult = client.IsAdult,
+                    PhoneNumber = client.Number,
+                };
+                model.History = await context.ClientHistories
+                  .Where(x => x.ClientId == client.Id)
+                  .Select(x => new ClientHistoryViewModel()
+                  {
+                      ClientId = x.ClientId,
+                      Price = x.ResPrice,
+                      Client = x.Client,
+                      AccomodationDate = x.AccomodationDate,
+                      LeaveDate = x.LeaveDate,
+                      RoomNumber = x.ResRoomNumber,
+                  })
+                   .ToListAsync();
+
+                return model;
+            }
+            return null;
+        }
+
         public async Task<EditClientViewModel> EditCustomerByIdAsync(string id)
         {
             Client client = await this.context.Clients.FindAsync(id);

@@ -42,6 +42,7 @@ namespace HotelReservations.Web
 
             // Add your services
             builder.Services.AddTransient<IUsersService, UsersService>();
+            builder.Services.AddTransient<IClientsService, ClientsService>();
 
             var app = builder.Build();
 

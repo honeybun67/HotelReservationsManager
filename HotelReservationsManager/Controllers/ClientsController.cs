@@ -30,12 +30,12 @@
         }
 
         // GET: Clients/Details/5
-        //public async Task<IActionResult> Details(string id, ClientDetailsViewModel model)
-        //{
-          //  model = await service.Get(id);
-          //  return View(model);
+        public async Task<IActionResult> Details(string id, ClientDetailsViewModel model)
+        {
+            model = await service.GetClientDetailsByIdAsync(id);
+            return View(model);
 
-       // }
+        }
         public async Task<IActionResult> Seed()
         {
             List<string> firstName = new List<string>() { "John", "William", "Sara", "Tony", "Jane", "Carl", "Ben", "Lusy" };

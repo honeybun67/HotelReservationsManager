@@ -20,7 +20,7 @@ namespace HotelReservationsManager.ViewModels.Clients
 
         [Display(Name = "Adult")]
         public bool IsAdult { get; set; }
-      //  public ICollection<ClientHistoryViewModel> History { get; set; } = new List<ClientHistoryViewModel>();
+        public ICollection<ClientHistoryViewModel> History { get; set; } = new List<ClientHistoryViewModel>();
 
     }
 }

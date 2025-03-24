@@ -4,6 +4,7 @@ namespace HotelReservationsManager.Services.Contracts
 {
     public interface IClientsService
     {
+        public Task<ClientDetailsViewModel> GetClientDetailsByIdAsync(string id);
         public Task<string> CreateClientAsync(CreateClientViewModel model);
 
         public Task<ClientsIndexViewModel> GetClientsAsync(ClientsIndexViewModel model);

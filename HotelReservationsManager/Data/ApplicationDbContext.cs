@@ -10,7 +10,7 @@ namespace HotelReservationsManager.Data
         public virtual DbSet<Client> Clients { get; set; }
         //public virtual DbSet<Room> Rooms { get; set; }
         //public virtual DbSet<Reservation> Reservations { get; set; }
-        //public virtual DbSet<ClientHistory> ClientHistories { get; set; }
+        public virtual DbSet<ClientHistory> ClientHistories { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

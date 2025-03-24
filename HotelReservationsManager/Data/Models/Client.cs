@@ -13,5 +13,7 @@
         public string? Email { get; set; }
 
         public bool IsAdult { get; set; }
+
+        public virtual ICollection<ClientHistory> ClientHistories { get; set; } = new List<ClientHistory>();
     }
 }
