@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelReservationsManagerManager.Data.Migrations
+namespace HotelReservationsManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250324203051_AddClientsHistory")]
-    partial class AddClientsHistory
+    [Migration("20250325065832_AddRooms")]
+    partial class AddRooms
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,34 @@ namespace HotelReservationsManagerManager.Data.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("ClientHistories");
+                });
+
+            modelBuilder.Entity("HotelReservationsManager.Data.Models.Room", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PricePerAdultBed")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PricePerChildBed")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.User", b =>
@@ -314,7 +342,7 @@ namespace HotelReservationsManagerManager.Data.Migrations
             modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>
                 {
                     b.HasOne("HotelReservationsManager.Data.Models.Client", "Client")
-                        .WithMany()
+                        .WithMany("ClientHistories")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -371,6 +399,11 @@ namespace HotelReservationsManagerManager.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelReservationsManager.Data.Models.Client", b =>
+                {
+                    b.Navigation("ClientHistories");
                 });
 #pragma warning restore 612, 618
         }

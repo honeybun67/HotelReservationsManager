@@ -14,6 +14,6 @@
 
         public bool IsAdult { get; set; }
 
-        public virtual ICollection<ClientHistory> ClientHistories { get; set; } = new List<ClientHistory>();
+        public virtual ICollection<ClientHistory> ClientHistories { get; set; } = new HashSet<ClientHistory>();
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelReservationsManagerManager.Data.Migrations
+namespace HotelReservationsManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -61,9 +61,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
                     b.Property<DateTime>("AccomodationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ClientHistoryId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -79,11 +76,37 @@ namespace HotelReservationsManagerManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientHistoryId");
-
                     b.HasIndex("ClientId");
 
                     b.ToTable("ClientHistories");
+                });
+
+            modelBuilder.Entity("HotelReservationsManager.Data.Models.Room", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PricePerAdultBed")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PricePerChildBed")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.User", b =>
@@ -315,10 +338,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>
                 {
-                    b.HasOne("HotelReservationsManager.Data.Models.ClientHistory", null)
-                        .WithMany("ClientHistories")
-                        .HasForeignKey("ClientHistoryId");
-
                     b.HasOne("HotelReservationsManager.Data.Models.Client", "Client")
                         .WithMany("ClientHistories")
                         .HasForeignKey("ClientId")
@@ -380,11 +399,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
                 });
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.Client", b =>
-                {
-                    b.Navigation("ClientHistories");
-                });
-
-            modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>
                 {
                     b.Navigation("ClientHistories");
                 });

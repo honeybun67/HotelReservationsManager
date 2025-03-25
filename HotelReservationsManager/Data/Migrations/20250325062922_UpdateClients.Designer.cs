@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelReservationsManagerManager.Data.Migrations
+namespace HotelReservationsManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250324210740_AddClientsHistory4")]
-    partial class AddClientsHistory4
+    [Migration("20250325062922_UpdateClients")]
+    partial class UpdateClients
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,9 +64,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
                     b.Property<DateTime>("AccomodationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ClientHistoryId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ClientId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -81,8 +78,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientHistoryId");
 
                     b.HasIndex("ClientId");
 
@@ -318,10 +313,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>
                 {
-                    b.HasOne("HotelReservationsManager.Data.Models.ClientHistory", null)
-                        .WithMany("ClientHistories")
-                        .HasForeignKey("ClientHistoryId");
-
                     b.HasOne("HotelReservationsManager.Data.Models.Client", "Client")
                         .WithMany("ClientHistories")
                         .HasForeignKey("ClientId")
@@ -383,11 +374,6 @@ namespace HotelReservationsManagerManager.Data.Migrations
                 });
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.Client", b =>
-                {
-                    b.Navigation("ClientHistories");
-                });
-
-            modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>
                 {
                     b.Navigation("ClientHistories");
                 });

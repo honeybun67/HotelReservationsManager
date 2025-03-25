@@ -43,7 +43,7 @@ namespace HotelReservations.Web
             // Add your services
             builder.Services.AddTransient<IUsersService, UsersService>();
             builder.Services.AddTransient<IClientsService, ClientsService>();
-
+            builder.Services.AddTransient<IRoomsService, RoomsService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -15,7 +15,5 @@ namespace HotelReservationsManager.Data.Models
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]
         public double ResPrice { get; set; }
-
-        public virtual ICollection<ClientHistory> ClientHistories { get; set; } = new List<ClientHistory>();
     }
 }
