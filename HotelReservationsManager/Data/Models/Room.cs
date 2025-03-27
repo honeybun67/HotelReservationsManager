@@ -12,8 +12,8 @@ namespace HotelReservationsManager.Data.Models
         public bool IsAvailable { get; set; }
         public double PricePerAdultBed { get; set; }
         public double PricePerChildBed { get; set; }
-        // public string? ReservationId { get; set; }
-        //[ForeignKey("ReservationId")]
-        // public virtual Reservation Reservation { get; set; }
+         public string? ReservationId { get; set; }
+        [ForeignKey("ReservationId")]
+         public virtual Reservation Reservation { get; set; }
     }
 }
