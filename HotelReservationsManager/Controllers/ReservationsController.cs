@@ -119,8 +119,10 @@ namespace HotelReservationsManager.Controllers
         {
             model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+
             model.ClientsToAdd = model.ClientsToAdd.Where(x => x.FirstName != null && x.LastName != null && x.Number != null).ToList();
             model.ClientsToRemove = model.ClientsToRemove.Where(x => x.RemoveFromRes).ToList();
+
 
             if (model.RoomId == null)
             {
@@ -133,6 +135,7 @@ namespace HotelReservationsManager.Controllers
                 ModelState.AddModelError(nameof(model.AccommodationDate), "Accommodation Date can't be after Leave Date");
                 return View(await service.EditReservationByIdAsync(model.Id));
             }
+
             if (await service.GetRoomCapacityAsync(model.RoomId) < model.ClientsToAdd.Count)
             {
                 ModelState.AddModelError(nameof(model.ClientsToAdd), "Number of people exceeds Room Capacity");
@@ -144,6 +147,7 @@ namespace HotelReservationsManager.Controllers
                 LastName = x.LastName,
                 Number = x.Number,
             }).ToList();
+
             foreach (var clnt in inputCustomers)
             {
                 Client client = await service.FindClientAsync(clnt);
