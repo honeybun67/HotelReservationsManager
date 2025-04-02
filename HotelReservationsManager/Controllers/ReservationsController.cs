@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using HotelReservationsManager.Data;
 using HotelReservationsManager.Data.Models;
 using HotelReservationsManager.Services.Contracts;
@@ -47,20 +42,16 @@ namespace HotelReservationsManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateReservationViewModel model)
         {
-            //Gets current user's id
             model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            //Remove temporary empty Client objects
             model.Clients = model.Clients.Where(x => x.FirstName != null && x.LastName != null && x.Number != null).ToList();
 
-            // Check if user submitted a roomid
             if (model.RoomId == null)
             {
                 ModelState.AddModelError(nameof(model.RoomId), "Please select and submit a room");
                 await ConfigureCreateVM(model, model.RoomId);
                 return View(model);
             }
-            //Checks Accommodation and Leave date if they are sensible
             if (CheckDurationOfDates(model.LeaveDate, model.AccommodationDate))
             {
                 ModelState.AddModelError(nameof(model.LeaveDate), "Leave date can't be before Accommodation Date");
@@ -68,14 +59,12 @@ namespace HotelReservationsManager.Controllers
                 await ConfigureCreateVM(model, model.RoomId);
                 return View(model);
             }
-            //Check if nubmer of people is more than room capacity
             if (await service.GetRoomCapacityAsync(model.RoomId) < model.Clients.Count)
             {
                 ModelState.AddModelError(nameof(model.Clients), "Number of people exceeds Room Capacity");
                 await ConfigureCreateVM(model, model.RoomId);
                 return View(model);
             }
-            //check if user inputed at least 1 Client
             if (!model.Clients.Any())
             {
                 ModelState.AddModelError(nameof(model.Clients), "Add at least 1 person");
@@ -88,7 +77,6 @@ namespace HotelReservationsManager.Controllers
                 LastName = x.LastName,
                 Number = x.Number,
             }).ToList();
-            //chek every inputted User if he exists in database and if he already has a reservation
             foreach (var cust in inputClients)
             {
                 Client Client = await service.FindClientAsync(cust);
@@ -131,24 +119,20 @@ namespace HotelReservationsManager.Controllers
         {
             model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            //Remove temporary empty Customer objects
             model.ClientsToAdd = model.ClientsToAdd.Where(x => x.FirstName != null && x.LastName != null && x.Number != null).ToList();
             model.ClientsToRemove = model.ClientsToRemove.Where(x => x.RemoveFromRes).ToList();
 
-            // Check if user submitted a roomid
             if (model.RoomId == null)
             {
                 ModelState.AddModelError(nameof(model.RoomId), "Please select and submit a room");
                 return View(await service.EditReservationByIdAsync(model.Id));
             }
-            //Checks Accommodation and Leave date if they are sensible
-            if (CheckDurationOfDates(model.LeaveDate, model.AccommodationDate))
+            if (CheckDurationOfDates(model.EmptyDate, model.AccommodationDate))
             {
-                ModelState.AddModelError(nameof(model.LeaveDate), "Leave date can't be before Accommodation Date");
+                ModelState.AddModelError(nameof(model.EmptyDate), "Leave date can't be before Accommodation Date");
                 ModelState.AddModelError(nameof(model.AccommodationDate), "Accommodation Date can't be after Leave Date");
                 return View(await service.EditReservationByIdAsync(model.Id));
             }
-            //Check if nubmer of people is more than room capacity
             if (await service.GetRoomCapacityAsync(model.RoomId) < model.ClientsToAdd.Count)
             {
                 ModelState.AddModelError(nameof(model.ClientsToAdd), "Number of people exceeds Room Capacity");
@@ -160,7 +144,6 @@ namespace HotelReservationsManager.Controllers
                 LastName = x.LastName,
                 Number = x.Number,
             }).ToList();
-            //chek every inputted User if he exists in database and if he already has a reservation
             foreach (var clnt in inputCustomers)
             {
                 Client client = await service.FindClientAsync(clnt);
@@ -198,7 +181,7 @@ namespace HotelReservationsManager.Controllers
 
         private bool ReservationExists(string id)
         {
-            return context.Reservations.Any(x => x.Id == id);
+            return _context.Reservations.Any(x => x.Id == id);
         }
         private async Task ConfigureCreateVM(CreateReservationViewModel model, string roomId)
         {

@@ -14,7 +14,6 @@ namespace HotelReservationsManager.ViewModels.Reservations
         public string RoomId { get; set; }
         public SelectList? Rooms { get; set; }
         public virtual ICollection<Client> Clients { get; set; } = new HashSet<Client>();
-
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
