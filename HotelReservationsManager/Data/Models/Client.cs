@@ -13,6 +13,8 @@
         public string? Email { get; set; }
 
         public bool IsAdult { get; set; }
+        public string? ReservationId { get; set; }
+        public virtual Reservation Reservation { get; set; }
 
         public virtual ICollection<ClientHistory> ClientHistories { get; set; } = new HashSet<ClientHistory>();
     }
