@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-//using HotelReservationsManager.Common;
+using HotelReservationsManager.Common;
 using HotelReservationsManager.Data;
 using HotelReservationsManager.Data.Models;
 using HotelReservationsManager.Services.Contracts;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using HotelReservationsManager.ViewModels.Users;
-using HotelReservationsManager;
+using HotelReservationsManager.Common;
 
 namespace HotelReservationsManager.Services
 {

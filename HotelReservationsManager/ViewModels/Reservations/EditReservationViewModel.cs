@@ -15,9 +15,14 @@ namespace HotelReservationsManager.ViewModels.Reservations
         [DisplayName("Breakfast")]
         public bool HasBreakfast { get; set; }
 
+
         [DisplayName("Allinclusive")]
         public bool HasAllInclusive { get; set; }
+
+
         public string RoomId { get; set; }
+
+
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
@@ -29,7 +34,7 @@ namespace HotelReservationsManager.ViewModels.Reservations
         [DataType(DataType.Date)]
         [DisplayName("Leave date")]
         public new DateTime EmptyDate { get; set; }
-        public ICollection<Client> ClientsToAdd { get; set; } = new List<Client>();
-        public ICollection<ClientIndexViewModel> ClientsToRemove { get; set; } = new List<ClientIndexViewModel>();
+        public IList<Client> ClientsToAdd { get; set; } = new List<Client>();
+        public IList<ClientIndexViewModel> ClientsToRemove { get; set; } = new List<ClientIndexViewModel>();
     }
 }

@@ -3,13 +3,13 @@ namespace HotelReservationsManager.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-   // using HotelReservationsManager.Common;
+    using HotelReservationsManager.Common;
     using HotelReservationsManager.Services.Contracts;
     using HotelReservationsManager.ViewModels.Users;
     using System.Security.Claims;
     using HotelReservationsManager.Services.Contracts;
     using HotelReservationsManager.ViewModels.Users;
-    using HotelReservationsManager;
+    using HotelReservationsManager.Common;
 
     public class UsersController : Controller
     {

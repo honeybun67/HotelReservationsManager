@@ -1,4 +1,4 @@
-﻿namespace HotelReservations.Web.Controllers
+﻿namespace HotelReservationsManager.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using HotelReservationsManager.Data;

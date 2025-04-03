@@ -1,11 +1,23 @@
-﻿using HotelReservationsManager.Data.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Castle.Core.Resource;
+using HotelReservationsManager.Data;
+using HotelReservationsManager.Data.Models;
+using HotelReservationsManager.Services.Contracts;
+using HotelReservationsManager.ViewModels.Clients;
+using HotelReservationsManager.ViewModels.Reservations;
+using HotelReservationsManager.ViewModels.Rooms;
+using HotelReservationsManager.Data.Models;
 using HotelReservationsManager.Data;
 using HotelReservationsManager.Services.Contracts;
 using HotelReservationsManager.ViewModels.Clients;
+using HotelReservationsManager.ViewModels.Reservations;
 using HotelReservationsManager.ViewModels.Rooms;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using HotelReservationsManager.ViewModels.Reservations;
 
 namespace HotelReservationsManager.Services
 {
@@ -42,7 +54,7 @@ namespace HotelReservationsManager.Services
             };
             reservation.Clients = new List<Client>();
 
-            reservation.Price = CalculatePriceWithExtras(model.WithBreakfast, model.AllInclusive);
+            reservation.Price = CalculatePriceWithExtras(model.WithBreakfast, model.WithBreakfast);
 
             if (room.Id != reservation.RoomId)
             {
@@ -57,9 +69,9 @@ namespace HotelReservationsManager.Services
             await this.context.Reservations.AddAsync(reservation);
             await this.context.SaveChangesAsync();
 
-            foreach (var item in SelectedClients)
+            foreach (var clnt in SelectedClients)
             {
-                Client client = await FindClientAsync(item);
+                Client client = await FindClientAsync(clnt);
                 if (client.Reservation == null && room.Capacity > reservation.Clients.Count)
                 {
                     reservation.Price += CalculatePrice(model.LeaveDate, model.AccommodationDate, room, client);
@@ -362,7 +374,8 @@ namespace HotelReservationsManager.Services
         }
         public async Task<Client> FindClientAsync(Client cust)
         {
-            Client Client = await context.Clients.FirstOrDefaultAsync(x => x.FirstName == cust.FirstName && x.LastName == cust.LastName && x.Number == cust.Number);
+            Client Client = await context.Clients.FirstOrDefaultAsync(x => x.FirstName == cust.FirstName &&
+x.LastName == cust.LastName && x.Number == cust.Number);
             if (Client != null)
             {
                 return Client;
@@ -385,7 +398,8 @@ namespace HotelReservationsManager.Services
             }
             return price;
         }
-        private double CalculatePrice(DateTime leaveDate, DateTime accomdate, Room room, Client cust)
+        private double CalculatePrice(DateTime leaveDate, DateTime accomdate, Room room,
+    Client cust)
         {
 
             TimeSpan duration = leaveDate - accomdate;
@@ -418,4 +432,3 @@ namespace HotelReservationsManager.Services
 
     }
 }
-

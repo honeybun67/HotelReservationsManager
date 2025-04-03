@@ -1,71 +1,60 @@
-﻿@model IEnumerable<HotelReservationsManager.Data.Models.Reservation>
+﻿@model IndexReservationsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Reservations</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create" class="btn btn-primary">Create New Reservation</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RoomId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccommodationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmptyDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WithBreakfast)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AllInclusive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RoomId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccommodationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmptyDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WithBreakfast)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AllInclusive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+<table class="table table-bordered table-striped table-hover" style="border-radius: 10px; overflow: hidden; text-align:center">
+	<thead>
+		<tr>
+			<th>ReservedRoom</th>
+			<th>AccommodationDate</th>
+			<th>LeaveDate</th>
+			<th>Breakfast</th>
+			<th>AllInclusive</th>
+			<th>Price</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Reservations)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Room.Number)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.AccommodationDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EmptyDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.WithBreakfast)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.AllInclusive)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Price)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+<partial name="_PagingPartial" />
