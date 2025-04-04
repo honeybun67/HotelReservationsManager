@@ -13,8 +13,7 @@ namespace HotelReservationsManager.ViewModels.Reservations
         [Required(ErrorMessage = "Please select and submit a room")]
         public string RoomId { get; set; }
         public SelectList? Rooms { get; set; }
-        public virtual IList<Client> Clients { get; set; } = new List<Client>();
-
+        public IList<Client> Clients { get; set; } = new List<Client>();
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -22,19 +21,16 @@ namespace HotelReservationsManager.ViewModels.Reservations
         [DisplayName("Accomodation date")]
         public DateTime AccommodationDate { get; set; }
 
-
         [Required]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
-        [DisplayName("Accomodation date")]
+        [DisplayName("Leave date")]
         public DateTime LeaveDate { get; set; }
 
-
         [DisplayName("Breakfast")]
-        public bool WithBreakfast { get; set; }
-
+        public bool HasBreakfast { get; set; }
 
         [DisplayName("Allinclusive")]
-        public bool AllInclusive { get; set; }
+        public bool HasAllInclusive { get; set; }
     }
 }

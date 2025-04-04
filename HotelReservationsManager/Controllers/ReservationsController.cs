@@ -9,11 +9,6 @@
     using System.Security.Claims;
     using Microsoft.AspNetCore.Authorization;
     using HotelReservationsManager.ViewModels;
-    using HotelReservationsManager.Data.Models;
-    using HotelReservationsManager.Data;
-    using HotelReservationsManager.Services.Contracts;
-    using HotelReservationsManager.ViewModels.Reservations;
-    using HotelReservationsManager.ViewModels;
 
     [Authorize(Roles = "Admin,User")]
     public class ReservationsController : Controller
@@ -144,9 +139,9 @@
                 return View(await service.EditReservationByIdAsync(model.Id));
             }
             //Checks Accommodation and Leave date if they are sensible
-            if (CheckDurationOfDates(model.EmptyDate, model.AccommodationDate))
+            if (CheckDurationOfDates(model.LeaveDate, model.AccommodationDate))
             {
-                ModelState.AddModelError(nameof(model.EmptyDate), "Leave date can't be before Accommodation Date");
+                ModelState.AddModelError(nameof(model.LeaveDate), "Leave date can't be before Accommodation Date");
                 ModelState.AddModelError(nameof(model.AccommodationDate), "Accommodation Date can't be after Leave Date");
                 return View(await service.EditReservationByIdAsync(model.Id));
             }

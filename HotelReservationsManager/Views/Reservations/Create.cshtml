@@ -1,4 +1,4 @@
-﻿﻿@using HotelReservationsManager.Common
+﻿@using HotelReservationsManager.Common
 @model CreateReservationViewModel
 
 @{
@@ -31,12 +31,12 @@
                     </div>
                     <div class="form-group form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" asp-for="WithBreakfast" /> @Html.DisplayNameFor(model => model.WithBreakfast)
+                            <input class="form-check-input" asp-for="HasBreakfast" /> @Html.DisplayNameFor(model => model.HasBreakfast)
                         </label>
                     </div>
                     <div class="form-group form-check">
                         <label class="form-check-label">
-                            <input class="form-check-input" asp-for="WithBreakfast" /> @Html.DisplayNameFor(model => model.WithBreakfast)
+                            <input class="form-check-input" asp-for="HasAllInclusive" /> @Html.DisplayNameFor(model => model.HasAllInclusive)
                         </label>
                     </div>
                     @if (Model.RoomCapacity > 0)
@@ -104,3 +104,4 @@
     </div>
 
 </div>
+

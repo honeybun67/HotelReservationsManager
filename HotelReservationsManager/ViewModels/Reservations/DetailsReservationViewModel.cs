@@ -16,24 +16,16 @@ namespace HotelReservationsManager.ViewModels.Reservations
         [DisplayName("Accomodation date")]
         public DateTime AccommodationDate { get; set; }
 
-
-
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         [DisplayName("Leave date")]
-        public DateTime EmptyDate { get; set; }
-
-
+        public DateTime LeaveDate { get; set; }
 
         [DisplayName("Breakfast")]
-        public bool WithBreakfast { get; set; }
-
-
+        public bool HasBreakfast { get; set; }
 
         [DisplayName("Allinclusive")]
-        public bool AllInclusive { get; set; }
-
-
+        public bool HasAllInclusive { get; set; }
 
         [Display(Name = "Total price")]
         [DataType(DataType.Currency)]

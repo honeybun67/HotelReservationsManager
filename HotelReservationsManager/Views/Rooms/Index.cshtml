@@ -4,147 +4,233 @@
 @model IndexRoomsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Rooms";
 }
 
-<h1>Rooms</h1>
+<style>
+    body {
+        background-color: #fefefe;
+    }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Room</a>
-</p>
+    .filter-section {
+        background-color: #e3f2fd; /* светло синьо */
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        border: 2px solid #2196f3;
+    }
 
-<form asp-action="Index" method="get">
-    <div>
-        <h4>Filter by:</h4>
-        <div>
-            <label asp-for="Capacity"></label>
-            <input type="number" asp-for="Capacity" name="Capacity" />
-        </div>
-        <div>
-            <label asp-for="FilterByType"></label>
-            <select class="form-select" asp-for="FilterByType" asp-items="Html.GetEnumSelectList<RoomType>()" name="FilterByType">
-                <option selected></option>
-            </select>
-        </div>
-        <div>
-            <label asp-for="IsAvailable"></label>
-            <input type="checkbox" asp-for="IsAvailable" name="IsAvailable" />
+        .filter-section h4 {
+            color: #0d47a1;
+        }
+
+    .form-label, .form-check-label {
+        color: #0d47a1;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+
+    table th {
+        background-color: #ffeb3b; /* жълто */
+        color: #0d47a1;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #fffde7; /* много светло жълто */
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #e3f2fd; /* светло синьо */
+    }
+
+    .btn-primary {
+        background-color: #2196f3;
+        border-color: #1976d2;
+    }
+
+    .btn-info {
+        background-color: #ffca28;
+        border-color: #ffb300;
+        color: #000;
+    }
+
+    .btn-success {
+        background-color: #4caf50;
+        border-color: #388e3c;
+    }
+
+    .btn-secondary {
+        background-color: #90caf9;
+        border-color: #64b5f6;
+        color: #000;
+    }
+
+    .btn-danger {
+        background-color: #f44336;
+        border-color: #d32f2f;
+    }
+
+    .pagination .page-link {
+        color: #0d47a1;
+    }
+
+    .pagination .active .page-link {
+        background-color: #ffca28;
+        border-color: #ffb300;
+        color: #000;
+    }
+
+    .pagination select {
+        width: auto;
+        display: inline-block;
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+        color: #0d47a1;
+    }
+
+    .display-6 {
+        color: #0d47a1;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="display-6">Rooms</h1>
+        <a asp-action="Create" class="btn btn-primary">+ New Room</a>
+    </div>
+
+    <form asp-action="Index" method="get" class="filter-section">
+        <h4><i class="fas fa-filter"></i> Filter by:</h4>
+        <div class="row">
+            <div class="col-md-4 form-group">
+                <label asp-for="Capacity" class="form-label"></label>
+                <input type="number" asp-for="Capacity" name="Capacity" class="form-control" />
+            </div>
+            <div class="col-md-4 form-group">
+                <label asp-for="FilterByType" class="form-label"></label>
+                <select class="form-select" asp-for="FilterByType" asp-items="Html.GetEnumSelectList<RoomType>()" name="FilterByType">
+                    <option selected></option>
+                </select>
+            </div>
+            <div class="col-md-4 form-group d-flex align-items-center">
+                <input type="checkbox" asp-for="IsAvailable" name="IsAvailable" class="form-check-input me-2" />
+                <label asp-for="IsAvailable" class="form-check-label"></label>
+            </div>
         </div>
         <input type="hidden" asp-for="Page" />
         <input type="hidden" asp-for="ItemsPerPage" />
-        <input type="submit" class="btn btn-info" />
+        <button type="submit" class="btn btn-info mt-3">Apply Filters</button>
+    </form>
+
+    <div class="table-container">
+        <table class="table table-bordered table-striped table-hover text-center align-middle shadow-sm rounded">
+            <thead>
+                <tr>
+                    <th>Capacity</th>
+                    <th>Number</th>
+                    <th>Type</th>
+                    <th>Available</th>
+                    <th>Price Per Adult Bed</th>
+                    <th>Price Per Child Bed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Rooms)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Capacity)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Number)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RoomType)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IsAvailable)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PricePerAdultBed)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PricePerChildBed)</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                @if (this.User.IsInRole(GlobalConstants.AdminRole))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm">Details</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-</form>
 
-<table class="table table-bordered table-striped table-hover" style="border-radius: 10px; overflow: hidden; text-align:center">
-    <thead>
-        <tr>
-            <th>Capacity</th>
-            <th>Number</th>
-            <th>Type</th>
-            <th>Available</th>
-            <th>PricePerAdultBed</th>
-            <th>PricePerChildBed</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Rooms)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Capacity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RoomType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsAvailable)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PricePerAdultBed)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PricePerChildBed)
-                </td>
-                <td>
-                    @if (this.User.IsInRole(GlobalConstants.AdminRole))
-                    {
-                        <p class="text-nowrap">
-                            <a asp-action="Edit" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
-                            <a asp-action="Delete" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                        </p>
-                    }
-                    else
-                    {
-                        <p class="text-nowrap">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a>
-                        </p>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<nav aria-label="..." class="">
-    <ul class="pagination justify-content-center">
-        <li style="margin-right:5px">
-            <form asp-action="@Model.Action" method="post" id="pageSizeForm">
-                <select asp-for="ItemsPerPage" class="form-control border-dark" onchange="changeItemsPerPage();">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-                <input type="submit" id="loginSubmit" style="visibility:hidden" />
-            </form>
-        </li>
-        <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
-            <a class="page-link" asp-action="@Model.Action" asp-route-page="@(Model.Page - 1)" asp-route-itemsPerPage="@Model.ItemsPerPage"
-               asp-route-Capacity="@Model.Capacity" asp-route-FilterByType="@Model.FilterByType" asp-route-IsAvailable="@Model.IsAvailable">
-                Back
-                <i class="fas fa-step-backward"></i>
-            </a>
-        </li>
-        @for (int i = Model.Page - 2; i < Model.Page; i++)
-        {
-            if (i > 0)
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center align-items-center">
+            <li class="me-2">
+                <form asp-action="@Model.Action" method="post" id="pageSizeForm">
+                    <select asp-for="ItemsPerPage" class="form-select border-dark" onchange="changeItemsPerPage();">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <input type="submit" id="loginSubmit" style="visibility:hidden" />
+                </form>
+            </li>
+            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="@Model.Action" asp-route-page="@(Model.Page - 1)"
+                   asp-route-itemsPerPage="@Model.ItemsPerPage"
+                   asp-route-Capacity="@Model.Capacity"
+                   asp-route-FilterByType="@Model.FilterByType"
+                   asp-route-IsAvailable="@Model.IsAvailable">
+                    <i class="fas fa-angle-left"></i> Back
+                </a>
+            </li>
+            @for (int i = Model.Page - 2; i < Model.Page; i++)
             {
-                <li class="page-item">
-                    <a class="page-link" asp-action="@Model.Action" asp-route-page="@i" asp-route-itemsPerPage="@Model.ItemsPerPage"
-                       asp-route-Capacity="@Model.Capacity" asp-route-FilterByType="@Model.FilterByType" asp-route-IsAvailable="@Model.IsAvailable">@i</a>
-                </li>
+                if (i > 0)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="@Model.Action" asp-route-page="@i"
+                           asp-route-itemsPerPage="@Model.ItemsPerPage"
+                           asp-route-Capacity="@Model.Capacity"
+                           asp-route-FilterByType="@Model.FilterByType"
+                           asp-route-IsAvailable="@Model.IsAvailable">@i</a>
+                    </li>
+                }
             }
-        }
-        <li class="page-item active" aria-current="page">
-            <span class="page-link">
-                @Model.Page
-                <span class="sr-only"></span>
-            </span>
-        </li>
-        @for (int i = Model.Page + 1; i <= Model.Page + 2; i++)
-        {
-            if (i <= Model.PagesCount)
+            <li class="page-item active">
+                <span class="page-link">@Model.Page</span>
+            </li>
+            @for (int i = Model.Page + 1; i <= Model.Page + 2; i++)
             {
-                <li class="page-item">
-                    <a class="page-link" asp-action="@Model.Action" asp-route-page="@i" asp-route-itemsPerPage="@Model.ItemsPerPage"
-                       asp-route-Capacity="@Model.Capacity" asp-route-FilterByType="@Model.FilterByType" asp-route-IsAvailable="@Model.IsAvailable">@i</a>
-                </li>
+                if (i <= Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="@Model.Action" asp-route-page="@i"
+                           asp-route-itemsPerPage="@Model.ItemsPerPage"
+                           asp-route-Capacity="@Model.Capacity"
+                           asp-route-FilterByType="@Model.FilterByType"
+                           asp-route-IsAvailable="@Model.IsAvailable">@i</a>
+                    </li>
+                }
             }
-        }
-        <li class="page-item @(Model.Page >= Model.PagesCount ? "disabled" : "")">
-            <a class="page-link" asp-action="@Model.Action" asp-route-page="@(Model.Page + 1)" asp-route-itemsPerPage="@Model.ItemsPerPage"
-               asp-route-Capacity="@Model.Capacity" asp-route-FilterByType="@Model.FilterByType" asp-route-IsAvailable="@Model.IsAvailable">
-                Next<i class="fas fa-step-forward"></i>
-            </a>
-        </li>
-    </ul>
-</nav>
+            <li class="page-item @(Model.Page >= Model.PagesCount ? "disabled" : "")">
+                <a class="page-link" asp-action="@Model.Action" asp-route-page="@(Model.Page + 1)"
+                   asp-route-itemsPerPage="@Model.ItemsPerPage"
+                   asp-route-Capacity="@Model.Capacity"
+                   asp-route-FilterByType="@Model.FilterByType"
+                   asp-route-IsAvailable="@Model.IsAvailable">
+                    Next <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 <script type="text/javascript">
     function changeItemsPerPage() {

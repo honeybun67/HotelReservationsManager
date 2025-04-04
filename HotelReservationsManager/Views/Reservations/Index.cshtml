@@ -1,60 +1,122 @@
 ﻿@model IndexReservationsViewModel
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Reservations</h1>
+<style>
+    body {
+        background-color: #f0f8ff; /* много светло синьо */
+    }
 
-<p>
-	<a asp-action="Create" class="btn btn-primary">Create New Reservation</a>
-</p>
-<table class="table table-bordered table-striped table-hover" style="border-radius: 10px; overflow: hidden; text-align:center">
-	<thead>
-		<tr>
-			<th>ReservedRoom</th>
-			<th>AccommodationDate</th>
-			<th>LeaveDate</th>
-			<th>Breakfast</th>
-			<th>AllInclusive</th>
-			<th>Price</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model.Reservations)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Room.Number)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.AccommodationDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.EmptyDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.WithBreakfast)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.AllInclusive)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Price)
-				</td>
-				<td>
-					<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a> |
-					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
-					<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+    h1 {
+        color: #004085;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.4rem 1rem;
+        margin: 0 0.2rem;
+    }
+
+    .table {
+        background-color: #ffffff;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .table thead {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: #fff3cd;
+        cursor: pointer;
+    }
+
+    td, th {
+        vertical-align: middle !important;
+    }
+
+    .action-buttons a {
+        display: inline-block;
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="top-bar">
+        <h1>Reservations</h1>
+        <a asp-action="Create" class="btn btn-primary">➕ Create New Reservation</a>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover text-center">
+        <thead>
+            <tr>
+                <th>Reserved Room</th>
+                <th>Accommodation Date</th>
+                <th>Leave Date</th>
+                <th>Breakfast</th>
+                <th>All Inclusive</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Reservations)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Room.Number)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AccommodationDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.LeaveDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HasBreakfast)</td>
+                    <td>@Html.DisplayFor(modelItem => item.HasAllInclusive)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                    <td class="action-buttons">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">✏️ Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">ℹ️ Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">🗑️ Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="_PagingPartial" />
+</div>
+
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-<partial name="_PagingPartial" />

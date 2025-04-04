@@ -48,13 +48,13 @@ namespace HotelReservationsManager.Services
             {
                 User = user,
                 AccommodationDate = model.AccommodationDate,
-                EmptyDate = model.LeaveDate,
-                AllInclusive = model.AllInclusive,
-                WithBreakfast = model.WithBreakfast,
+                LeaveDate = model.LeaveDate,
+                HasAllInclusive = model.HasAllInclusive,
+                HasBreakfast = model.HasBreakfast,
             };
             reservation.Clients = new List<Client>();
 
-            reservation.Price = CalculatePriceWithExtras(model.WithBreakfast, model.WithBreakfast);
+            reservation.Price = CalculatePriceWithExtras(model.HasBreakfast, model.HasAllInclusive);
 
             if (room.Id != reservation.RoomId)
             {
@@ -94,9 +94,9 @@ namespace HotelReservationsManager.Services
                     UserId = x.UserId,
                     Room = context.Rooms.FirstOrDefault(y => y.Id == x.RoomId),
                     AccommodationDate = x.AccommodationDate,
-                    EmptyDate = x.EmptyDate,
-                    AllInclusive = x.AllInclusive,
-                    WithBreakfast = x.WithBreakfast,
+                    LeaveDate = x.LeaveDate,
+                    HasAllInclusive = x.HasAllInclusive,
+                    HasBreakfast = x.HasBreakfast,
                     Price = x.Price,
                 })
                 .ToListAsync();
@@ -114,9 +114,9 @@ namespace HotelReservationsManager.Services
                     Id = reservation.Id,
                     UserId = reservation.UserId,
                     AccommodationDate = reservation.AccommodationDate,
-                    EmptyDate = reservation.EmptyDate,
-                    AllInclusive = reservation.AllInclusive,
-                    WithBreakfast = reservation.WithBreakfast,
+                    LeaveDate = reservation.LeaveDate,
+                    HasAllInclusive = reservation.HasAllInclusive,
+                    HasBreakfast = reservation.HasBreakfast,
                     Price = reservation.Price,
                 };
 
@@ -148,9 +148,9 @@ namespace HotelReservationsManager.Services
                     UserId = reservation.UserId,
                     RoomId = reservation.RoomId,
                     AccommodationDate = reservation.AccommodationDate,
-                    EmptyDate = reservation.EmptyDate,
-                    HasAllInclusive = reservation.AllInclusive,
-                    HasBreakfast = reservation.WithBreakfast,
+                    LeaveDate = reservation.LeaveDate,
+                    HasAllInclusive = reservation.HasAllInclusive,
+                    HasBreakfast = reservation.HasBreakfast,
                 };
                 model.ClientsToRemove = reservation.Clients.Select(x => new ClientIndexViewModel()
                 {
@@ -193,10 +193,10 @@ namespace HotelReservationsManager.Services
             }
 
             reservation.AccommodationDate = model.AccommodationDate;
-            reservation.EmptyDate = model.EmptyDate;
+            reservation.LeaveDate = model.LeaveDate;
 
-            reservation.AllInclusive = model.HasAllInclusive;
-            reservation.WithBreakfast = model.HasBreakfast;
+            reservation.HasAllInclusive = model.HasAllInclusive;
+            reservation.HasBreakfast = model.HasBreakfast;
 
             reservation.Price = CalculatePriceWithExtras(model.HasBreakfast, model.HasAllInclusive);
 
@@ -228,7 +228,7 @@ namespace HotelReservationsManager.Services
 
             foreach (var item in reservation.Clients)
             {
-                reservation.Price += CalculatePrice(model.EmptyDate, model.AccommodationDate, room, item);
+                reservation.Price += CalculatePrice(model.LeaveDate, model.AccommodationDate, room, item);
             }
 
             context.Update(reservation);
@@ -253,10 +253,10 @@ namespace HotelReservationsManager.Services
                 {
                     Id = reservation.Id,
                     AccommodationDate = reservation.AccommodationDate,
-                    EmptyDate = reservation.EmptyDate,
+                    LeaveDate = reservation.LeaveDate,
                     UserId = reservation.UserId,
-                    AllInclusive = reservation.AllInclusive,
-                    WithBreakfast = reservation.WithBreakfast,
+                    HasAllInclusive = reservation.HasAllInclusive,
+                    HasBreakfast = reservation.HasBreakfast,
                     Price = reservation.Price,
                 };
 
@@ -357,7 +357,7 @@ namespace HotelReservationsManager.Services
             {
                 Client = dbClient,
                 AccomodationDate = reservation.AccommodationDate,
-                LeaveDate = reservation.EmptyDate,
+                LeaveDate = reservation.LeaveDate,
                 ResPrice = reservation.Price,
                 ResRoomNumber = reservation.Room.Number,
             };
@@ -428,7 +428,6 @@ x.LastName == cust.LastName && x.Number == cust.Number);
             }
             return false;
         }
-
 
     }
 }

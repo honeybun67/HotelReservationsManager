@@ -11,9 +11,9 @@ namespace HotelReservationsManager.Data.Models
         public virtual User User { get; set; }
         public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
         public DateTime AccommodationDate { get; set; }
-        public DateTime EmptyDate { get; set; }
-        public bool WithBreakfast { get; set; }
-        public bool AllInclusive { get; set; }
+        public DateTime LeaveDate { get; set; }
+        public bool HasBreakfast { get; set; }
+        public bool HasAllInclusive { get; set; }
         [Column(TypeName = "money")]
         public double Price { get; set; }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelReservationsManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250402120232_Reservations")]
-    partial class Reservations
+    [Migration("20250404145127_Models")]
+    partial class Models
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,14 +94,17 @@ namespace HotelReservationsManager.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly>("AccommodationDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("AccommodationDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<bool>("AllInclusive")
+                    b.Property<bool>("HasAllInclusive")
                         .HasColumnType("bit");
 
-                    b.Property<DateOnly>("EmptyDate")
-                        .HasColumnType("date");
+                    b.Property<bool>("HasBreakfast")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LeaveDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
@@ -113,9 +116,6 @@ namespace HotelReservationsManager.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("WithBreakfast")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -388,9 +388,11 @@ namespace HotelReservationsManager.Migrations
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.Client", b =>
                 {
-                    b.HasOne("HotelReservationsManager.Data.Models.Reservation", null)
+                    b.HasOne("HotelReservationsManager.Data.Models.Reservation", "Reservation")
                         .WithMany("Clients")
                         .HasForeignKey("ReservationId");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("HotelReservationsManager.Data.Models.ClientHistory", b =>

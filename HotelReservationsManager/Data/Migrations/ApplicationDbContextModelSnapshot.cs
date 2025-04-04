@@ -94,10 +94,13 @@ namespace HotelReservationsManager.Migrations
                     b.Property<DateTime>("AccommodationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("AllInclusive")
+                    b.Property<bool>("HasAllInclusive")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("EmptyDate")
+                    b.Property<bool>("HasBreakfast")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LeaveDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Price")
@@ -110,9 +113,6 @@ namespace HotelReservationsManager.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("WithBreakfast")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
