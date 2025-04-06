@@ -1,107 +1,78 @@
-﻿@using HotelReservationsManager.Common
-@model CreateReservationViewModel
+﻿@model DetailsReservationViewModel
 
 @{
-    ViewData["Title"] = "Create Reservation";
+    ViewData["Title"] = "Delete";
 }
-<div class="row d-flex justify-content-center align-items-center h-100">
-    <div class="card rounded-3" style="background-color:ghostwhite">
-        <h1 class="text-center">Create Reservation</h1>
-        <div class="card-body p-4 p-md-5">
-            <form asp-controller="Reservations" asp-action="Create" method="get">
-                <label asp-for="RoomId" class="control-label">Select Room:</label>
-                <select asp-for="RoomId" asp-items="@Model.Rooms"></select>
-                <span asp-validation-for="RoomId" class="text-danger" style="display:block;"></span>
-                <input type="submit" class="btn btn-primary" id="loginSubmit" />
-            </form>
-            @if (Model.RoomId != null)
+
+<h1>Delete Reservation</h1>
+
+<h3>Are you sure you want to delete this reservation?</h3>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.AccommodationDate)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.AccommodationDate)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.LeaveDate)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.LeaveDate)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.HasBreakfast)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.HasBreakfast)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.HasAllInclusive)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.HasAllInclusive)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Price)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Price)
+    </dd>
+</dl>
+
+@if (Model.Clients.Any())
+{
+    <h4>Clients:</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Clients)
             {
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="RoomId" class="form-control" />
-                    <div class="form-group">
-                        <label asp-for="AccommodationDate" class="control-label"></label>
-                        <input asp-for="AccommodationDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
-                        <span asp-validation-for="AccommodationDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="LeaveDate" class="control-label"></label>
-                        <input asp-for="LeaveDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" class="form-control" />
-                        <span asp-validation-for="LeaveDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="HasBreakfast" /> @Html.DisplayNameFor(model => model.HasBreakfast)
-                        </label>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="HasAllInclusive" /> @Html.DisplayNameFor(model => model.HasAllInclusive)
-                        </label>
-                    </div>
-                    @if (Model.RoomCapacity > 0)
-                    {
-                        <div class="form-group">
-                            <h4 style="text-align:center; font-size:25px">
-                                Client info:
-                            </h4>
-                            <div class="justify-content-center" style="margin:10px 0px 10px 0px">
-                                <span asp-validation-for="Clients" class="text-danger text-center">
-                                </span>
-                            </div>
-                            <table class="table table-responsive table-hover"
-                                   style="border-radius: 15px; border-style:solid overflow: hidden; text-align:center">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>PhoneNumber</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < Model.RoomCapacity; i++)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <label asp-for="Clients[i].FirstName" class="control-label"></label>
-                                                <input asp-for="Clients[i].FirstName" class="form-control" />
-                                                <span asp-validation-for="Clients[i].FirstName" class="text-danger"></span>
-                                            </td>
-                                            <td>
-                                                <label asp-for="Clients[i].LastName" class="control-label"></label>
-                                                <input asp-for="Clients[i].LastName" class="form-control" />
-                                                <span asp-validation-for="Clients[i].LastName" class="text-danger"></span>
-                                            </td>
-                                            <td>
-                                                <label asp-for="Clients[i].Number" class="control-label"></label>
-                                                <input asp-for="Clients[i].Number" class="form-control" />
-                                                <span asp-validation-for="Clients[i].Number" class="text-danger"></span>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-
-
-                    <a asp-controller="Clients" asp-action="Create" class="btn btn-outline-success " style="margin: 10px 0px 10px 0px;">New Client</a>
-                    @if (User.IsInRole(GlobalConstants.AdminRole))
-                    {
-                        <div>
-                            <a asp-controller="Rooms" asp-action="Create" class="btn btn-outline-primary " style="margin: 10px 0px 10px 0px;">New Room <i class="fa-regular fa-square-plus"></i></a>
-                        </div>
-                    }
-                    <div class="form-group text-center">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                    </div>
-                </form>
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>
+                        <a asp-controller="Clients" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    </td>
+                </tr>
             }
-            <div>
-                <a asp-action="Index" class="btn btn-info">Back to List</a>
-            </div>
-        </div>
-    </div>
+        </tbody>
+    </table>
+}
 
-</div>
-
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
